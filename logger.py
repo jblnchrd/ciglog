@@ -1,5 +1,6 @@
+ 
 """
- This program is free software: you can redistribute it and/or modify
+    This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -11,9 +12,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 """
-
 
 import sys
 from time import *
@@ -34,11 +33,9 @@ def utimes_to_list():
     return times
 
 def make_log_file():
-    f = open("C:\\Users\\tharoot\\Documents\\pyciglogs.txt", "w")
+    f = open("", "w")
     add_entry(f)
-    print("remember: Enter m as arg for menu.")
-
-
+    
 
 def get_last():
     ents = []
@@ -46,7 +43,16 @@ def get_last():
     last = ents[-1]
     return last
 
-
+def remove_last(logf):
+    with open(logf, "r") as log:
+        l = list(log)
+    last_line = len(l)
+    del l[last_line - 1]
+    with open(logf, "w") as log:
+        for n in l:
+            log.write(n)
+            
+            
 
 def diff_gen(t1, t2):#strings t1, t2
     
@@ -65,7 +71,7 @@ def diff_gen(t1, t2):#strings t1, t2
 
 
 def print_diff():
-# probably the ugliest, worst code ever.rework this.
+# probably the ugliest, shittiest code ever...but it works.
     ents = load_log()
     last_times_ents = ents[-2:]
     final_ents = " ".join(last_times_ents).split(" ")
@@ -94,7 +100,7 @@ def get_utime(entry):
     return 0.
 
 
-def print_diff_now():
+def print_diff_now(nonmil=False):
     ents = load_log()
     last_time = ents[-1]
     last = last_time[11:19]
@@ -103,37 +109,27 @@ def print_diff_now():
     final = last.split(":")
     now_n = [int(i) for i in now]
     final_n = [int(i) for i in final]
-    now_n[0] = now_n[0] #% 12
-    final_n[0] = final_n[0] #% 12
+    if(nonmil):
+        now_n[0] = now_n[0] % 12
+        final_n[0] = final_n[0] % 12
     assert(len(now_n) == len(final_n))
     total = []
     #for i in range(len(now_n)):
     total = time_diff(final_n, now_n)
     assert(len(total) == 3)
-    print("{t[0]}:{t[1]}:{t[2]} since last smoke.".format(t=total))
-
-
-
-def to_seconds(lst):
-    seconds = 0
-    for n in range(len(lst)):
-        if(n == 0):
-            seconds += lst[n]*3600.
-        else:
-            seconds += lst[n]*60.
-    return seconds
+    print("{}:{}:{} since last smoke.".format(total[0], total[1], total[2]))
 
 
 def seconds_to_format(seconds):
     l = ()
     min, sec = divmod(seconds, 60)
     hour, min = divmod(min, 60)
-    l += (hour, min, sec)
+    l = (hour, min, sec)
     return l
 
 
 #needs work. I think.
-def time_diff(a, b): #Terrible code to subtract times, waay too long. But again, it works...
+def time_diff(a, b): #Terrible code to subtract times. But hey, it works...
     ans = [0,0,0]
     ans2 = [0,0,0]
     c = [23,60,60]
@@ -175,17 +171,20 @@ def time_diff(a, b): #Terrible code to subtract times, waay too long. But again,
 
 def avg_time(logf):
     utimes = utimes_to_list()
+    utimes = filter(lambda a: a != 0.0, utimes)
+    #print(utimes)
     ntimes = len(utimes)
     time_diffs = []
     total = 0.
-    i = 0
-    for i in xrange(ntimes-1, 2, -2):
-        if (i-1 >= 1):
-            time_diffs.append(utimes[i] - utimes[i-1])
-            
+    
+    for i in xrange(ntimes - 1, 0, -2):
+        if (i-1 >= 0):
+            time_diffs.append(float(utimes[i]) - float(utimes[i-1]))
+    #print(time_diffs)
     for j in range(len(time_diffs)):
         total += time_diffs[j]
     avg = total / float(len(time_diffs))
+    #print(avg)
     formatted = seconds_to_format(avg)
     return formatted #a tuple
 
@@ -193,22 +192,42 @@ def avg_time(logf):
 def show_usage():
     print("USAGE\n\n[-n]:\tDifference now\n[-c]:\tchange log file\n\
     [-a]:\taverage\n[-d]:\tdifference\n[-l]:\tshow last\n[-p]:\tavg per day\n[-z]:\tnew log\n")
-    print("Execute the program without arguments to add an entry to the log.")
+    print("[-s]\tprint log")
+    print("[-r]\tremove last entry")
+
 
 def load_log(fname=""):
     log = open(fname, "r")
+    #with open(fname, "r") as log:
     lines_list = log.readlines()
     log.close()
     return lines_list
 
+def print_log():
+    lines = load_log()
+    for line in lines:
+        print(line)
 
-
-def menu(opt, fname):
+        
+def num_entries(fil):
+    with open(fil, "r") as log:
+        l = list(log)
+    return len(l)
+    
+    
+def menu(opt, f):
+    fname = ""
     
     if ('-' in opt):
         if('h' in opt):
             show_usage()
         else:
+            if('s' in opt):
+                print_log()
+                
+            if('r' in opt):
+                remove_last(fname)
+
             if('t' in opt):
                 print(get_last())
                              
@@ -220,10 +239,7 @@ def menu(opt, fname):
                 
             if('a' in opt):
                 avg = avg_time(fname)
-                l = []
-                for i in avg:
-                    l.append(int(i))
-                print("Average seconds between logs: {t[0]}:{t[1]}:{t[2]}".format(t=l))
+                print("Average time between logs: {0}:{1}:{2}".format(int(avg[0]), int(avg[1]), int(avg[2])))
     else:
         print("Remember to place a - in front of all arguments")
         show_usage()
@@ -233,12 +249,12 @@ def menu(opt, fname):
 # ctime()[11:19] returns the time only from the string...
 def main():
     fname = ""
-    f = open("fname", "a")
+    f = open("", "a")
     args = sys.argv
     if (os.path.isfile(fname) and len(args) == 1):
         add_entry(f)
     elif (len(args) > 1):
-        menu(args[1])
+        menu(args[1], f)
     else:
         really = raw_input("Are you sure you wish to create new log file?")
         if(really == "y" or really == "Y"):
@@ -252,7 +268,7 @@ def main():
         else:
             f.close()
             exit()
-    f.close() #just to be sure...
+    f.close()
     exit()
 
 
