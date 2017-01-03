@@ -1,0 +1,12 @@
+
+Usage:
+
+[-n]: Difference now
+[-a]: Average difference
+[-d]: Difference between last two
+[-l]: Log event now
+[-p]: Average per day
+[-s]: Print log
+[-r]: Remove last entry
+[-g]: Show last entry
+[-t]: Set a timer
