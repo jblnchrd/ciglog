@@ -16,7 +16,7 @@ def show_usage():
 def menu(opt, f):
     fname = filehandler.get_config_file()
     assert(f == fname)
-    print("f is fname!")
+    
     if ('-' in opt):
         if('h' in opt):
             show_usage()
