@@ -77,7 +77,7 @@ def print_diff_now(fname, nonmil=False):
     assert(len(now_n) == len(final_n))
     total = []
     #for i in range(len(now_n)):
-    total = time_diff(final_n, now_n)
+    total = mtime.time_diff(final_n, now_n)
     assert(len(total) == 3)
     print("{}:{}:{} since last smoke.".format(total[0], total[1], total[2]))
     
