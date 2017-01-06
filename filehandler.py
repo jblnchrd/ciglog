@@ -11,7 +11,7 @@ def get_config_file():
     lines = file_to_list("config.txt")
     for line in lines:
         if "file=" in line:
-            return line[5:]
+            return line[len("file="):]
     return 0
 
 
