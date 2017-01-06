@@ -1,4 +1,4 @@
 #settings
 
 #Default log file
-file=C:\Users\tharoot\Documents\ciglogger\pyciglogs.txt
+file=logfile path here
