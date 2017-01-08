@@ -9,7 +9,8 @@ def set_timer(alarm_time):
     sleep_for = int(alarm_time) - int(time_now)
     assert(sleep_for > 0)
     sleep(sleep_for)
-    winsound.PlaySound("SyntaxWarning", winsound.SND_ALIAS)
+    for i in xrange(4):
+        winsound.Beep(1100, 900)
 
     
     
