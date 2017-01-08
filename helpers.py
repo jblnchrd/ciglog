@@ -16,7 +16,7 @@ def show_usage():
 def menu(opt, f):
     fname = filehandler.get_config_file()
     assert(f == fname)
-    
+    #print("f is fname!")
     if ('-' in opt):
         if('h' in opt):
             show_usage()
@@ -58,8 +58,13 @@ def menu(opt, f):
             if('a' in opt):
                 avg = mtime.avg_time(f)
                 print("Average time between logs: {0}:{1}:{2}".format(int(avg[0]), int(avg[1]), int(avg[2])))
+    
+            if('q' in opt):
+                mtime.print_per_date(f)
+            
     else:
         print("Remember to place a - in front of all arguments")
+
         show_usage()
         
 def print_diff_now(fname, nonmil=False):
