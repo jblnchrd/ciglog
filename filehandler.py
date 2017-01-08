@@ -59,3 +59,18 @@ def print_log(fname):
     f = file_to_list(fname)
     for line in f:
         print(line)
+
+        
+def get_days(logf, dates=False):
+    logs = file_to_list(logf)
+    day_list = []
+    if(dates):
+        for log in logs:
+            day_list.append(log[:10])
+    else:
+        for log in logs:
+            day_list.append(log[:3])
+    #print day_list
+    return day_list
+
+        
