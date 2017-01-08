@@ -6,6 +6,7 @@ Usage:
 [-d]: Difference between last two
 [-l]: Log event now
 [-p]: Average per day
+[-q]: Number per date
 [-s]: Print log
 [-r]: Remove last entry
 [-g]: Show last entry
