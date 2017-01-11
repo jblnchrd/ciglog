@@ -61,7 +61,7 @@ def avg_time(logf):
     time_diffs = []
     total = 0.
     
-    for i in xrange(ntimes - 1, 0, -2):
+    for i in xrange(ntimes - 1, 0, -1):
         if (i-1 >= 0):
             time_diffs.append(float(utimes[i]) - float(utimes[i-1]))
     #print("time_diffs: {}".format(time_diffs))
